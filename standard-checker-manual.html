@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>문항 검토소 · 사용 안내</title>
+<meta name="description" content="문항 검토소 사용 안내 — 단원을 고르고 문항을 넣어 프롬프트를 복사하면, 어떤 AI에서든 2022 개정 중학교 과학 성취기준을 근거로 선행 여부를 점검할 수 있습니다." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  :root{
+    --paper:#EEF1F6; --surface:#FFFFFF; --surface-2:#F6F8FC;
+    --ink:#16203A; --ink-soft:#3B4663; --muted:#6B7793;
+    --brand:#1E3A6B; --brand-deep:#15294E; --brand-tint:#E8EFF9;
+    --line:#D9DFEA; --line-soft:#E7ECF4;
+    --ok:#15803D; --ok-bg:#E8F4ED; --ok-line:#BEE2CC;
+    --warn:#A86A06; --warn-bg:#FAF1DC; --warn-line:#EAD49E;
+    --bad:#B42318; --bad-bg:#FAEAE7; --bad-line:#EFC4BD;
+    --serif:'Noto Serif KR',serif;
+    --sans:'Pretendard','Pretendard Variable',-apple-system,BlinkMacSystemFont,system-ui,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --radius:14px; --radius-sm:10px;
+    --shadow-sm:0 1px 2px rgba(21,41,78,.06),0 1px 3px rgba(21,41,78,.05);
+    --shadow-md:0 8px 24px -12px rgba(21,41,78,.22),0 2px 6px rgba(21,41,78,.06);
+    --maxw:880px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--sans);background:radial-gradient(1100px 560px at 88% -12%,rgba(30,58,107,.06),transparent 60%),var(--paper);color:var(--ink);line-height:1.68;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.32;letter-spacing:-.01em;margin:0;}
+  p{margin:0;}
+  a{color:var(--brand);}
+  ::selection{background:var(--brand);color:#fff;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+  .seal circle,.seal line{stroke:var(--brand);}
+
+  header.site{position:sticky;top:0;z-index:50;background:rgba(238,241,246,.85);backdrop-filter:saturate(150%) blur(10px);border-bottom:1px solid var(--line-soft);}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:62px;}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;}
+  .brand .mark{width:32px;height:32px;flex:0 0 auto;}
+  .brand .name{font-family:var(--serif);font-weight:700;font-size:1.08rem;color:var(--ink);}
+  .brand .tag{display:block;font-family:var(--sans);font-weight:500;font-size:.68rem;color:var(--muted);margin-top:-2px;}
+  .open-app{font-family:var(--sans);font-weight:700;font-size:.86rem;color:#fff;background:var(--brand);padding:9px 16px;border-radius:999px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;box-shadow:var(--shadow-sm);transition:.15s;}
+  .open-app:hover{background:var(--brand-deep);color:#fff;}
+  .open-app svg{width:15px;height:15px;}
+
+  .hero{padding:64px 0 40px;position:relative;overflow:hidden;}
+  .hero .watermark{position:absolute;right:-70px;top:-50px;width:380px;height:380px;opacity:.05;pointer-events:none;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.76rem;font-weight:700;letter-spacing:.05em;color:var(--brand);padding:6px 12px;border:1px solid var(--brand-tint);background:var(--surface);border-radius:999px;}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--brand);}
+  .hero h1{font-size:clamp(1.8rem,5vw,2.7rem);font-weight:700;margin:18px 0 14px;letter-spacing:-.02em;position:relative;}
+  .hero .lead{font-size:1.05rem;color:var(--ink-soft);max-width:640px;position:relative;}
+
+  section.block{padding:30px 0;border-top:1px solid var(--line-soft);}
+  .block h2{font-size:1.45rem;display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+  .block h2 .n{font-family:var(--sans);font-size:.82rem;font-weight:800;color:#fff;background:var(--brand);width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;}
+  .block .sub{color:var(--muted);font-size:.95rem;margin:0 0 22px 37px;}
+
+  /* 3단계 */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 18px;position:relative;}
+  .step .idx{font-family:var(--serif);font-weight:700;font-size:2rem;color:var(--brand-tint);line-height:1;position:absolute;right:14px;top:10px;}
+  .step .k{font-size:.72rem;font-weight:800;letter-spacing:.05em;color:var(--brand);}
+  .step h3{font-family:var(--sans);font-weight:700;font-size:1.04rem;margin:7px 0 7px;color:var(--ink);}
+  .step p{font-size:.9rem;color:var(--ink-soft);}
+  .tipline{margin-top:18px;display:flex;gap:10px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 16px;font-size:.9rem;color:var(--ink-soft);}
+  .tipline svg{width:17px;height:17px;color:var(--brand);flex:0 0 auto;margin-top:2px;}
+
+  /* 화면 구성 */
+  .parts{display:grid;gap:12px;}
+  .part{display:flex;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;}
+  .part .badge{flex:0 0 auto;font-family:var(--sans);font-weight:800;font-size:.8rem;color:var(--brand);background:var(--brand-tint);border-radius:8px;padding:4px 10px;height:fit-content;}
+  .part h3{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--ink);margin:0 0 5px;}
+  .part p{font-size:.92rem;color:var(--ink-soft);}
+  .part p .chiplabel{display:inline-block;font-weight:700;color:var(--brand);background:var(--brand-tint);border-radius:5px;padding:0 6px;font-size:.86em;}
+
+  /* 위계 사다리 */
+  .ladder-wrap{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;}
+  .ladder{width:184px;flex:0 0 auto;}
+  .ladder-text h3{font-family:var(--sans);font-size:1.02rem;font-weight:700;color:var(--ink);margin:0 0 8px;}
+  .ladder-text p{font-size:.92rem;color:var(--ink-soft);margin-bottom:8px;}
+  .ladder-text .hs-note{font-size:.88rem;color:var(--bad);background:var(--bad-bg);border:1px solid var(--bad-line);border-radius:var(--radius-sm);padding:9px 13px;margin-top:4px;}
+
+  /* 판정 */
+  .verdicts{display:grid;gap:12px;}
+  .verdict{display:flex;gap:13px;align-items:flex-start;background:var(--surface);border:1px solid;border-radius:var(--radius);padding:15px 18px;}
+  .verdict .stamp{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.82rem;color:#fff;flex:0 0 auto;margin-top:1px;}
+  .verdict h3{font-family:var(--sans);font-size:1rem;font-weight:700;margin:0 0 3px;}
+  .verdict p{font-size:.9rem;color:var(--ink-soft);}
+  .verdict.ok{border-color:var(--ok-line);background:var(--ok-bg);} .verdict.ok .stamp{background:var(--ok);} .verdict.ok h3{color:var(--ok);}
+  .verdict.warn{border-color:var(--warn-line);background:var(--warn-bg);} .verdict.warn .stamp{background:var(--warn);} .verdict.warn h3{color:var(--warn);}
+  .verdict.bad{border-color:var(--bad-line);background:var(--bad-bg);} .verdict.bad .stamp{background:var(--bad);} .verdict.bad h3{color:var(--bad);}
+  .outputs{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;}
+  .outputs h3{font-family:var(--sans);font-size:.92rem;font-weight:800;color:var(--ink-soft);margin:0 0 10px;}
+  .outputs ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;}
+  .outputs li{font-size:.92rem;color:var(--ink-soft);padding-left:18px;position:relative;}
+  .outputs li::before{content:"■";color:var(--brand);position:absolute;left:0;font-size:.7em;top:.35em;}
+  .outputs li b{color:var(--ink);font-weight:700;}
+
+  /* FAQ */
+  .faq details{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);margin-bottom:9px;overflow:hidden;}
+  .faq summary{cursor:pointer;list-style:none;padding:15px 18px;font-family:var(--sans);font-weight:700;font-size:.98rem;color:var(--ink);display:flex;align-items:center;gap:11px;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary .q{font-family:var(--serif);font-weight:700;color:var(--brand);flex:0 0 auto;}
+  .faq summary .chev{margin-left:auto;width:16px;height:16px;color:var(--muted);transition:transform .2s;flex:0 0 auto;}
+  .faq details[open] summary .chev{transform:rotate(90deg);}
+  .faq .a{padding:0 18px 16px 41px;font-size:.93rem;color:var(--ink-soft);}
+  .faq .a b{color:var(--ink);}
+
+  .notice{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:0 var(--radius) var(--radius) 0;padding:18px 22px;font-size:.9rem;color:var(--ink-soft);line-height:1.7;}
+  .notice b{color:var(--ink);}
+
+  footer.site{padding:40px 0 56px;border-top:1px solid var(--line-soft);margin-top:30px;}
+  footer .f{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:space-between;}
+  footer .fn{font-family:var(--serif);font-weight:700;font-size:1rem;color:var(--ink);display:flex;align-items:center;gap:9px;}
+  footer .meta{font-size:.82rem;color:var(--muted);}
+
+  @media (max-width:720px){
+    .steps{grid-template-columns:1fr;}
+    .ladder-wrap{grid-template-columns:1fr;justify-items:center;text-align:left;}
+    .ladder{width:170px;}
+    .brand .tag{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
+  :focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:6px;}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="sealMark">
+    <circle cx="50" cy="50" r="46.5" fill="none" stroke-width="1.6"/>
+    <circle cx="50" cy="50" r="42.5" fill="none" stroke-width="4.5" stroke-dasharray="1.1 7" opacity=".85"/>
+    <circle cx="50" cy="50" r="38" fill="none" stroke-width=".9"/>
+    <circle cx="46" cy="46" r="11.5" fill="none" stroke-width="2.6"/>
+    <line x1="54.5" y1="54.5" x2="63" y2="63" stroke-width="3.2" stroke-linecap="round"/>
+  </g>
+</defs></svg>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="문항 검토소 사용 안내">
+      <svg class="mark seal" viewBox="0 0 100 100"><use href="#sealMark"/></svg>
+      <span><span class="name">문항 검토소</span><span class="tag">사용 안내</span></span>
+    </a>
+    <!-- 같은 폴더에 앱을 올렸다면 아래 링크가 바로 동작합니다. 파일명이 다르면 href만 바꾸세요. -->
+    <a class="open-app" href="문항검토소.html">
+      앱 열기
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+    </a>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <svg class="watermark seal" viewBox="0 0 100 100" aria-hidden="true"><use href="#sealMark"/></svg>
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>처음 쓰는 분을 위한 안내</span>
+    <h1>3단계면 끝납니다</h1>
+    <p class="lead">단원을 고르고, 문항을 넣고, 만들어진 프롬프트를 복사해 쓰던 AI에 붙여넣으면 됩니다. 2022 개정 중학교 과학 성취기준을 근거로 ‘이 문항이 교육과정 범위 안인지’를 점검해 줍니다. 설치도, 로그인도, API 키도 필요 없습니다.</p>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <h2><span class="n">1</span>빠른 시작</h2>
+    <p class="sub">앱을 열면 바로 보이는 ‘검토 프롬프트 생성기’에서 진행합니다.</p>
+    <div class="steps">
+      <div class="step"><span class="idx">1</span><span class="k">단원 선택</span><h3>검토할 단원 고르기</h3><p>학년 탭(중1·중2·중3)이나 영역에서 문항이 속한 단원을 누릅니다. 성취기준·해설·위계가 자동으로 담깁니다.</p></div>
+      <div class="step"><span class="idx">2</span><span class="k">문항 입력</span><h3>문항 붙여넣기</h3><p>발문·자료 설명·선택지·정답을 함께 붙여넣습니다. 많이 넣을수록 검토가 정확해집니다.</p></div>
+      <div class="step"><span class="idx">3</span><span class="k">복사 · 검토</span><h3>프롬프트 복사 → AI에 붙여넣기</h3><p>‘프롬프트 복사’를 누르고, ChatGPT·Claude·Gemini 등 쓰던 AI 채팅창에 붙여넣어 전송합니다.</p></div>
+    </div>
+    <div class="tipline">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <span>AI는 따로 정하지 않아도 됩니다. 평소 쓰는 AI 아무거나 열어 로그인된 채팅창에 그대로 붙여넣으면 됩니다.</span>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <h2><span class="n">2</span>화면 구성</h2>
+    <p class="sub">생성기는 위에서 아래로 ① 단원 → ② 문항 → ③ 프롬프트 순서입니다.</p>
+    <div class="parts">
+      <div class="part"><span class="badge">①</span><div><h3>검토할 단원</h3><p><span class="chiplabel">전체 · 중1 · 중2 · 중3</span> 탭으로 학년을 고르고, 영역별로 묶인 단원 칩을 누릅니다. 고른 단원은 진하게 표시됩니다.</p></div></div>
+      <div class="part"><span class="badge">단원 상세</span><div><h3>성취기준 · 해설 · 위계</h3><p>단원을 고르면 그 아래에 <b>성취기준 원문</b>이 나오고, <span class="chiplabel">성취기준 해설 보기</span>를 누르면 ‘무엇을 어디까지 다루는지’ 해설이 펼쳐집니다. 이어서 위로는 <b>고등학교</b>, 아래로는 <b>초등학교</b> 연계가 표시됩니다.</p></div></div>
+      <div class="part"><span class="badge">고등 통합과학</span><div><h3>중→고 선행 대조</h3><p>연결된 단원이라면 <span class="chiplabel">고등 통합과학</span> 칸이 나오고, 펼치면 실제 고등 통합과학 성취기준이 보입니다. 문항이 이 수준을 정답의 핵심으로 당겨 묻는지 확인하는 기준이 됩니다.</p></div></div>
+      <div class="part"><span class="badge">②</span><div><h3>검토할 문항</h3><p>왼쪽 칸에 문항을 붙여넣습니다. 발문, 도표·그림 등 자료 설명, 선택지, 정답, 배점까지 넣을수록 정확합니다.</p></div></div>
+      <div class="part"><span class="badge">③</span><div><h3>완성된 프롬프트</h3><p>오른쪽에 프롬프트가 자동으로 만들어집니다. <span class="chiplabel">표준</span>은 판정·근거·요소별 검토까지 자세히, <span class="chiplabel">간단</span>은 한 문단으로 빠르게 봅니다. 아래 <span class="chiplabel">프롬프트 복사</span> 버튼으로 복사합니다.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <h2><span class="n">3</span>위계 이해하기</h2>
+    <p class="sub">선행 판정의 핵심은 ‘학년 위계’입니다. 검토할 단원을 가운데 두고 위아래를 봅니다.</p>
+    <div class="ladder-wrap">
+      <svg class="ladder seal" viewBox="0 0 184 250" role="img" aria-label="고등 위, 중학교 가운데, 초등 아래로 놓인 학년 위계 사다리">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#6B7793" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <rect x="10" y="8" width="164" height="50" rx="9" fill="#FAEAE7" stroke="#EFC4BD" stroke-width="1"/>
+        <text x="92" y="29" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#B42318">고등학교</text>
+        <text x="92" y="46" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="#B42318">당겨 쓰면 선행 의심</text>
+        <line x1="92" y1="98" x2="92" y2="62" stroke="#6B7793" stroke-width="1.4" marker-end="url(#ar)"/>
+        <rect x="10" y="98" width="164" height="54" rx="9" fill="#E8EFF9" stroke="#1E3A6B" stroke-width="1.3"/>
+        <text x="92" y="120" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#15294E">중학교 단원</text>
+        <text x="92" y="138" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="#1E3A6B">검토할 문항이 속한 칸</text>
+        <line x1="92" y1="192" x2="92" y2="156" stroke="#6B7793" stroke-width="1.4" marker-end="url(#ar)"/>
+        <rect x="10" y="192" width="164" height="50" rx="9" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="1"/>
+        <text x="92" y="213" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="13" font-weight="700" fill="#444441">초등학교</text>
+        <text x="92" y="230" text-anchor="middle" font-family="Pretendard,sans-serif" font-size="11" fill="#5F5E5A">선수 학습 · 토대</text>
+      </svg>
+      <div class="ladder-text">
+        <h3>아래는 디딤돌, 위는 경계선</h3>
+        <p>아래(초등)는 이미 배운 토대라 ‘적정’ 쪽 신호이고, 위(고등)의 개념·용어를 정답의 핵심으로 당겨 오면 ‘선행 의심’ 쪽 신호입니다. 이 연결은 추측이 아니라 교육과정 ‘성취기준 적용 시 고려 사항’에 적힌 연계를 그대로 따릅니다.</p>
+        <div class="hs-note">연결된 단원은 고등 <b>통합과학</b> 성취기준 원문까지 함께 표시·삽입되어, 문항이 고등 수준을 당겨 묻는지 실제 문구로 대조할 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <h2><span class="n">4</span>결과 읽는 법</h2>
+    <p class="sub">AI는 다음 세 가지 중 하나로 판정하고, 그 근거를 함께 제시합니다.</p>
+    <div class="verdicts">
+      <div class="verdict ok"><span class="stamp">✓</span><div><h3>적정</h3><p>성취기준의 범위와 수준 안에 있습니다. 그대로 출제해도 무리가 없습니다.</p></div></div>
+      <div class="verdict warn"><span class="stamp">!</span><div><h3>주의</h3><p>경계선에 있습니다. 발문·자료·선택지를 다시 살피고, 필요하면 표현을 다듬는 것이 좋습니다.</p></div></div>
+      <div class="verdict bad"><span class="stamp">×</span><div><h3>선행 의심</h3><p>성취기준 범위를 벗어났을 가능성이 있습니다. 상위 학년 개념을 당겨 묻고 있지 않은지 확인이 필요합니다.</p></div></div>
+    </div>
+    <div class="outputs">
+      <h3>표준 프롬프트가 돌려주는 항목</h3>
+      <ul>
+        <li><b>판정</b> — 적정 / 주의 / 선행 의심</li>
+        <li><b>한 줄 요약</b>과 <b>근거</b> — 어느 성취기준·해설 문구에 비추어 판단했는지 인용</li>
+        <li><b>요소별 검토</b> — 발문 · 자료 · 선택지 각각</li>
+        <li><b>위계 검토</b> — 상·하위 학년 내용과의 관계</li>
+        <li><b>개선 제안</b> — ‘주의’·‘선행 의심’이면 어떻게 고치면 ‘적정’이 되는지</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <h2><span class="n">5</span>자주 묻는 질문</h2>
+    <div class="faq" style="margin-top:6px;">
+      <details>
+        <summary><span class="q">Q</span>어떤 AI에 붙여넣어야 하나요?<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <div class="a">무엇이든 괜찮습니다. ChatGPT, Claude, Gemini 등 평소 쓰는 AI의 로그인된 채팅창에 복사한 프롬프트를 그대로 붙여넣고 전송하면 됩니다. 이 도구 자체는 AI를 호출하지 않고, ‘잘 만든 질문’만 만들어 줍니다.</div>
+      </details>
+      <details>
+        <summary><span class="q">Q</span>문항은 어떻게 넣는 게 좋나요?<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <div class="a">발문, 도표·그래프·그림 등 <b>자료에 대한 설명</b>, 선택지, 정답, 배점까지 함께 넣으세요. 자료나 오답 선택지에 상위 개념이 숨어드는 경우가 많아, 정보가 많을수록 검토가 정확해집니다.</div>
+      </details>
+      <details>
+        <summary><span class="q">Q</span>‘표준’과 ‘간단’ 프롬프트는 뭐가 다른가요?<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <div class="a"><b>표준</b>은 판정·근거·요소별 검토·위계 검토·개선 제안까지 꼼꼼히 받습니다. <b>간단</b>은 핵심만 한 문단으로 빠르게 확인할 때 씁니다. 여러 문항을 빠르게 훑을 때는 간단, 한 문항을 깊이 볼 때는 표준이 좋습니다.</div>
+      </details>
+      <details>
+        <summary><span class="q">Q</span>‘고등 통합과학’은 왜 나오나요?<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <div class="a">중학교 문항이 고등학교 수준을 당겨 묻는 ‘중→고 선행’을 잡기 위해서입니다. 교육과정에 고등 통합과학과 연계된다고 명시된 단원에서는, 실제 통합과학 성취기준을 함께 보여 주고 프롬프트에도 담아 정확히 대조합니다.</div>
+      </details>
+      <details>
+        <summary><span class="q">Q</span>올해(2026학년도) 중3 시험에 써도 되나요?<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <div class="a">주의가 필요합니다. 2022 개정 교육과정은 중3까지 2027학년도부터 전면 적용되고, 2026학년도 중3은 아직 2015 개정을 적용합니다. 이 도구의 중3 단원은 2022 개정 기준이라, 올해 중3 문항에는 참고용으로만 쓰고 2015 개정 성취기준과 함께 확인하세요. 중1·중2는 그대로 사용할 수 있습니다.</div>
+      </details>
+      <details>
+        <summary><span class="q">Q</span>AI의 판정이 최종 결론인가요?<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <div class="a">아닙니다. AI의 판정은 검토를 돕는 <b>참고 의견</b>입니다. 최종 판단은 성취기준·해설·지도서를 교사가 직접 대조하고, 필요하면 학교의 선행학습 영향평가 절차를 거쳐 내려야 합니다.</div>
+      </details>
+      <details>
+        <summary><span class="q">Q</span>성취기준 데이터는 어디서 가져왔나요?<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></summary>
+        <div class="a">교육부 「2022 개정 과학과 교육과정」(교육부 고시 별책9)의 원문에서 추출했습니다. 중학교 과학 23개 단원·성취기준 87개와 고등 통합과학1·2 성취기준 31개, 그리고 단원별 위계(연계) 정보가 들어 있습니다.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="notice">
+      <b>유의 사항.</b> 이 도구는 선행학습 여부 판단을 돕는 보조 도구이며, AI의 판정은 참고 의견입니다. 최종 책임 있는 판단은 교사와 학교의 몫입니다. 근거 법령은 「공교육 정상화 촉진 및 선행교육 규제에 관한 특별법」과 교육부 「선행교육예방을 위한 교과별 안내자료」입니다.
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap f">
+    <span class="fn"><svg class="mark seal" style="width:28px;height:28px;" viewBox="0 0 100 100" aria-hidden="true"><use href="#sealMark"/></svg>문항 검토소 · 사용 안내</span>
+    <span class="meta">2022 개정 중학교 과학 · 성취기준 기반 선행 점검 도구</span>
+  </div>
+</footer>
+
+</body>
+</html>
